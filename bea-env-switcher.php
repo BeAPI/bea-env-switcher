@@ -83,7 +83,7 @@ class BEA_ENV_Switcher {
 
 	public function admin_css() { ?>
         <style>
-            .environment-dev > a {
+            #wp-admin-bar-environment > a {
                 font-weight: bold !important;
             }
 
@@ -122,7 +122,7 @@ class BEA_ENV_Switcher {
 	private static function print_inline_style( $color ) {
 		?>
         <style>
-            .environment-dev > a {
+            #wp-admin-bar-environment > a {
                 background-color: <?= $color ?> !important;
                 color: white !important;
             }
