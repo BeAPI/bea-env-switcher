@@ -104,9 +104,7 @@ class BEA_ENV_Switcher {
 	}
 
 	public static function add_environment_notification() {
-		global $_wp_theme_features;
-		$wp_env = $_wp_theme_features['wpg-env-warning'][0];
-		if ( ! is_admin() && 'prod' == $wp_env && ! current_user_can( 'manage_options' ) ) {
+		if ( ! is_admin() && 'prod' == WP_ENV && ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 		$colors = [
@@ -117,9 +115,8 @@ class BEA_ENV_Switcher {
 			'pre-production' => 'orange',
 			'prod'           => 'red'
 		];
-		$color  = isset( $colors[ $wp_env ] ) ? $colors[ $wp_env ] : $colors['default'];
+		$color  = isset( $colors[ WP_ENV ] ) ? $colors[ WP_ENV ] : $colors['default'];
 		self::print_inline_style( $color );
-		echo '<div id="wpg-env-info">' . $wp_env . '</div>';
 	}
 
 	private static function print_inline_style( $color ) {
