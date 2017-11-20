@@ -4,7 +4,7 @@ Plugin Name: BEA ENV Switcher
 Plugin URI: https://github.com/BeAPI/bea-env-switcher
 Description: Be API environnement switcher
 Author: https://beapi.fr
-Version: 1.0.0
+Version: 1.0.1
 Author URI: https://beapi.fr
  ----
  Copyright 2017 Be API Technical team (human@beapi.fr)
@@ -35,23 +35,28 @@ use Purl\Url;
  *    'production'  => 'http://example.com'
  *   ];
  *
- *   define('STAGES', serialize($stages));
+ *   define('ENVIRONMENTS', serialize($stages));
  *
  * WP_STAGE must be defined as the current stage
  */
 class BEA_ENV_Switcher {
 	public function __construct() {
-		add_action( 'admin_bar_menu', array( __CLASS__, 'admin_bar_stage_switcher' ) );
-		add_action( 'wp_before_admin_bar_render', array( __CLASS__, 'admin_css' ) );
+		add_action( 'admin_bar_menu', array( $this, 'admin_bar_stage_switcher' ) );
+		add_action( 'wp_before_admin_bar_render', array( $this, 'admin_css' ) );
 
-		add_action( 'wp_footer', array( __CLASS__, 'add_environment_notification' ) );
-		add_action( 'admin_footer', array( __CLASS__, 'add_environment_notification' ) );
+		add_action( 'wp_footer', array( $this, 'add_environment_notification' ) );
+		add_action( 'admin_footer', array( $this, 'add_environment_notification' ) );
 	}
 
 	public function admin_bar_stage_switcher( $admin_bar ) {
-		if ( ! defined( 'ENVIRONMENTS' ) && ! defined( 'WP_ENV' ) && ! is_super_admin() ) {
+		if ( ! is_super_admin() ) {
 			return;
 		}
+
+		if ( ! defined( 'ENVIRONMENTS' ) || ! defined( 'WP_ENV' ) ) {
+			return;
+		}
+
 		$stages        = unserialize( ENVIRONMENTS );
 		$current_stage = WP_ENV;
 		foreach ( $stages as $stage => $url ) {
@@ -76,7 +81,7 @@ class BEA_ENV_Switcher {
 				'id'     => "stage_$stage",
 				'parent' => 'environment',
 				'title'  => ucwords( $stage ),
-				'href'   => $url
+				'href'   => $url,
 			] );
 		}
 	}
@@ -113,7 +118,7 @@ class BEA_ENV_Switcher {
 			'qualif'         => 'orange',
 			'contrib'        => 'orange',
 			'pre-production' => 'orange',
-			'prod'           => 'red'
+			'prod'           => 'red',
 		];
 		$color  = isset( $colors[ WP_ENV ] ) ? $colors[ WP_ENV ] : $colors['default'];
 		self::print_inline_style( $color );
