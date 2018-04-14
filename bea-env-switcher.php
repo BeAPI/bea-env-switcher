@@ -4,7 +4,7 @@ Plugin Name: BEA ENV Switcher
 Plugin URI: https://github.com/BeAPI/bea-env-switcher
 Description: Be API environnement switcher
 Author: https://beapi.fr
-Version: 1.0.1
+Version: 1.0.2
 Author URI: https://beapi.fr
  ----
  Copyright 2017 Be API Technical team (human@beapi.fr)
@@ -109,7 +109,7 @@ class BEA_ENV_Switcher {
 	}
 
 	public static function add_environment_notification() {
-		if ( ! is_admin() && 'prod' == WP_ENV && ! current_user_can( 'manage_options' ) ) {
+		if ( ! is_admin() && defined( 'WP_ENV' ) && 'prod' === WP_ENV && ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 		$colors = [
@@ -120,7 +120,7 @@ class BEA_ENV_Switcher {
 			'pre-production' => 'orange',
 			'prod'           => 'red',
 		];
-		$color  = isset( $colors[ WP_ENV ] ) ? $colors[ WP_ENV ] : $colors['default'];
+		$color  = defined( 'WP_ENV' ) && isset( $colors[ WP_ENV ] ) ? $colors[ WP_ENV ] : $colors['default'];
 		self::print_inline_style( $color );
 	}
 
